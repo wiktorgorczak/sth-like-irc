@@ -1,0 +1,16 @@
+//
+// Created by wiktor on 28.12.2020.
+//
+
+#ifndef STHLIKEIRCSERVER_USERSTATUS_H
+#define STHLIKEIRCSERVER_USERSTATUS_H
+
+
+enum UserStatus {
+    ONLINE,
+    AWAY,
+    OFFLINE
+};
+
+
+#endif //STHLIKEIRCSERVER_USERSTATUS_H
