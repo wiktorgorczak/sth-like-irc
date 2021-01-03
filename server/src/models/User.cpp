@@ -31,3 +31,11 @@ UserStatus User::getStatus() const {
 void User::setStatus(UserStatus status) {
     status_ = status;
 }
+
+int User::getConnectionSocketDescriptor() const {
+    return connectionSocketDescriptor;
+}
+
+void User::setConnectionSocketDescriptor(int connectionSocketDescriptor) {
+    User::connectionSocketDescriptor = connectionSocketDescriptor;
+}

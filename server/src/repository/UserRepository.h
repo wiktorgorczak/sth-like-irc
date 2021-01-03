@@ -21,6 +21,7 @@ public:
     void remove(User* user) override;
     User* findByName(std::string name) override;
     User* findByEmail(std::string email);
+    User* findBySocketDescriptor(int connectionSocketDescriptor);
 };
 
 

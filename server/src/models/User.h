@@ -21,11 +21,16 @@ public:
 
     void setStatus(UserStatus status);
 
+    int getConnectionSocketDescriptor() const;
+
+    void setConnectionSocketDescriptor(int connectionSocketDescriptor);
+
 private:
     std::string name_;
     std::string email_;
     std::string password_;
     UserStatus status_;
+    int connectionSocketDescriptor;
 };
 
 

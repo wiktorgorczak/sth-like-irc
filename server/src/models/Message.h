@@ -34,6 +34,7 @@ private:
     User user;
     time_t time_;
     Room room_;
+
 };
 
 
