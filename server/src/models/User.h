@@ -30,7 +30,7 @@ private:
     std::string email_;
     std::string password_;
     UserStatus status_;
-    int connectionSocketDescriptor;
+    int connectionSocketDescriptor = -1;
 };
 
 

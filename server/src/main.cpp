@@ -32,7 +32,7 @@ int main()
         std::cout << "[OK]" << std::endl;
     }
 
-    ServerSession *serverSession = new ServerSession(configFile, usersFile, roomsFile);
+    auto *serverSession = new ServerSession(configFile, usersFile, roomsFile);
     serverSession->run();
     delete serverSession;
 

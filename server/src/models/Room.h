@@ -15,13 +15,13 @@ public:
 
     void setName(const std::string &name);
 
-    const std::vector<User> &getUsers() const;
+    std::vector<User*>* getUsers();
 
-    void setUsers(const std::vector<User> &users);
+    void setUsers(const std::vector<User*> &users);
 
 private:
     std::string name_;
-    std::vector<User> users_;
+    std::vector<User*> users_;
 };
 
 

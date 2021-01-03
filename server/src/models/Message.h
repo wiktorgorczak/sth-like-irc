@@ -10,6 +10,7 @@
 #include <time.h>
 #include "User.h"
 #include "Room.h"
+#include "MessageType.h"
 
 class Message {
 public:
@@ -17,24 +18,28 @@ public:
 
     void setContent(const std::string &content);
 
-    const User &getUser() const;
+    User* getUser() const;
 
-    void setUser(const User &user);
+    void setUser(User* user);
 
     time_t getTime() const;
 
     void setTime(time_t time);
 
-    const Room &getRoom() const;
+    Room* getRoom() const;
 
-    void setRoom(const Room &room);
+    void setRoom(Room* room);
+
+    MessageType getType() const;
+
+    void setType(MessageType type);
 
 private:
     std::string content_;
-    User user;
+    User* user;
     time_t time_;
-    Room room_;
-
+    Room* room_;
+    MessageType type_;
 };
 
 

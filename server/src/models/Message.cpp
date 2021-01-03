@@ -12,11 +12,11 @@ void Message::setContent(const std::string &content) {
     content_ = content;
 }
 
-const User &Message::getUser() const {
+User* Message::getUser() const {
     return user;
 }
 
-void Message::setUser(const User &user) {
+void Message::setUser(User* user) {
     Message::user = user;
 }
 
@@ -28,10 +28,18 @@ void Message::setTime(time_t time) {
     time_ = time;
 }
 
-const Room &Message::getRoom() const {
+Room* Message::getRoom() const {
     return room_;
 }
 
-void Message::setRoom(const Room &room) {
+void Message::setRoom(Room* room) {
     room_ = room;
+}
+
+MessageType Message::getType() const {
+    return type_;
+}
+
+void Message::setType(MessageType type) {
+    type_ = type;
 }

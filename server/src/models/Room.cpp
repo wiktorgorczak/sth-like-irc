@@ -12,10 +12,10 @@ void Room::setName(const std::string &name) {
     name_ = name;
 }
 
-const std::vector<User> &Room::getUsers() const {
-    return users_;
+std::vector<User*>* Room::getUsers() {
+    return &users_;
 }
 
-void Room::setUsers(const std::vector<User> &users) {
+void Room::setUsers(const std::vector<User*> &users) {
     users_ = users;
 }

@@ -1,4 +1,6 @@
 #include "ServerSession.h"
+#include "../models/Response.h"
+#include "../exceptions/InternalError.h"
 
 ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile, std::ifstream &roomsFile) {
     ConfigurationParser configurationParser;
@@ -6,6 +8,7 @@ ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile
     RoomRepositoryParser roomRepositoryParser;
     quit = false;
     messageParser = new MessageParser();
+    userParser = new UserParser();
     currentThreads = new int;
     *currentThreads = 0;
 
@@ -28,12 +31,22 @@ ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile
     serverSocketDescriptor = init();
 }
 
+ServerSession::~ServerSession() {
+    delete messageParser;
+    delete userParser;
+    delete currentThreads;
+    delete configuration;
+    delete userRepository;
+    delete roomRepository;
+    delete[] sockets;
+}
+
 void ServerSession::initSignalHandler() {
     struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = quitSignalHandler;
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
-    sigaction(SIGINT, &sigIntHandler, NULL);
+    sigaction(SIGINT, &sigIntHandler, nullptr);
 }
 
 void quitSignalHandler(int signal) {
@@ -50,7 +63,7 @@ int ServerSession::init() {
     serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddress.sin_port = htons(configuration->getServerPort());
 
-    int serverSocketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
+    serverSocketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
     if(serverSocketDescriptor < 0) {
         std::cout << "Could not create socket.\t[ERROR]" << std::endl;
         throw InitServerError();
@@ -77,43 +90,93 @@ int ServerSession::init() {
 
 void ServerSession::handleConnection(int connectionSocketDescriptor) {
     pthread_t thread;
-    struct ThreadData *tData = new ThreadData;
+    auto tData = new ThreadData;
     tData->connectionSocketDescriptor = connectionSocketDescriptor;
     tData->serverSession = this;
 
     addThread(connectionSocketDescriptor);
-    int createThreadResult = pthread_create(&thread, NULL, threadBehavior, (void*)tData);
+    int createThreadResult = pthread_create(&thread, nullptr, threadBehavior, (void*)tData);
 
     if(createThreadResult < 0) {
         std::cout << "Could not create thread for a connection!\t[ERROR]" << std::endl;
     }
 }
 
-bool ServerSession::listenOnSocket(int connectionSocketDescriptor) {
+bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[], int bufferSize) {
+    bool shouldRemainLoggedIn = true;
+    Response response = OK;
+    memset(buffer, '\0', bufferSize);
+    if(read(connectionSocketDescriptor, buffer, sizeof(buffer)) < 0) {
+        std::cout << "An error occurred while reading to the buffer." << std::endl;
+    } else {
+        std::string messageText(buffer);
+        try {
+            Message *message = messageParser->parseFrom(messageText);
 
+            if(!authorize(message->getUser())) {
+                response = UNAUTHORIZED;
+            } else {
+                switch(message->getType()) {
+                    case MessageType::STANDARD:
+                        sendMessage(message);
+                        break;
+                    case MessageType::CREATE_ACCOUNT:
+                        createAccount(message->getUser());
+                        break;
+                    case MessageType::JOIN_ROOM:
+                        joinRoom(message->getUser(), message->getRoom());
+                        break;
+                    case MessageType::LEAVE_ROOM:
+                        leaveRoom(message->getUser(), message->getRoom());
+                        break;
+                    case MessageType::SET_STATUS:
+                        setStatus(message->getUser(), message->getContent());
+                        break;
+                    case MessageType::LOGIN:
+                        login(message->getUser(), connectionSocketDescriptor);
+                        break;
+                    case MessageType::LOGOFF:
+                        logoff(message->getUser());
+                        shouldRemainLoggedIn = false;
+                        break;
+                }
+            }
+
+            delete message;
+        } catch(ParsingError& error) {
+            std::cout << "Could not parse message!" << std::endl;
+            response = PARSING_ERROR;
+        } catch(InternalError& error) {
+            response = INTERNAL_ERROR;
+        }
+
+        sendResponse(response, connectionSocketDescriptor);
+    }
+    return shouldRemainLoggedIn;
 }
 
 void* ServerSession::threadBehavior(void *tData) {
     pthread_detach(pthread_self());
 
-    struct ThreadData* threadData = (struct ThreadData*)tData;
+    auto threadData = (struct ThreadData*)tData;
     int socket = threadData->connectionSocketDescriptor;
     ServerSession* serverSession = threadData->serverSession;
-    char* buffer = new char[serverSession->getConfiguration()->getBufferSize()];
+    int bufferSize = serverSession->getConfiguration()->getBufferSize();
+    char* buffer = new char[bufferSize];
 
-    while(serverSession->listenOnSocket(socket));
+    while(serverSession->listenOnSocket(socket, buffer, bufferSize));
 
     serverSession->removeThread(socket);
-    delete buffer;
+    delete[] buffer;
     delete threadData;
-    pthread_exit(NULL);
+    pthread_exit(nullptr);
 }
 
 void ServerSession::run() {
     int connectionSocketDescriptor;
 
     while(!quit) {
-        connectionSocketDescriptor = accept(serverSocketDescriptor, NULL, NULL);
+        connectionSocketDescriptor = accept(serverSocketDescriptor, nullptr, nullptr);
         std::cout << "Incoming connection..." << std::endl;
         if(connectionSocketDescriptor < 0) {
             std::cout <<"Could not create socket for a connection!\t[ERROR]" << std::endl;
@@ -127,4 +190,127 @@ void ServerSession::run() {
 
 Configuration *ServerSession::getConfiguration() const {
     return configuration;
+}
+
+void ServerSession::addThread(int connectionSocketDescriptor) {
+    pthread_mutex_lock(&lock);
+    while(*currentThreads == configuration->getMaxThreadCount()) {
+        pthread_cond_wait(&con, &lock);
+    }
+    *currentThreads++;
+
+    for(int i = 0; i < configuration->getMaxThreadCount(); i++) {
+        if(sockets[i] == -1) {
+            sockets[i] = connectionSocketDescriptor;
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&lock);
+}
+
+void ServerSession::removeThread(int connectionSocketDescriptor) {
+    pthread_mutex_lock(&lock); //TODO: won't it cause a deadlock?
+    for(int i = 0; i < configuration->getMaxThreadCount(); i++) {
+        if(sockets[i] == connectionSocketDescriptor) {
+            sockets[i] = -1;
+            break;
+        }
+    }
+    *currentThreads--;
+    pthread_cond_signal(&con);
+    pthread_mutex_unlock(&lock);
+}
+
+void ServerSession::sendMessage(Message *message) {
+    std::string messageText;
+    try {
+        messageText = messageParser->parseTo(message);
+    } catch(ParsingError &error) {
+        std::cout << "could not parse message!" << std::endl;
+        throw error;
+    }
+
+    std::vector<User*>* users = message->getRoom()->getUsers();
+    char* buffer = new char[configuration->getBufferSize()];
+    strcpy(buffer, messageText.c_str());
+
+    for(const User* user : *users) {
+        if(user->getConnectionSocketDescriptor() > -1) {
+            if(write(user->getConnectionSocketDescriptor(), buffer, sizeof(buffer)) < 0) {
+                std::cout << "Could not send a message from user "
+                    + message->getUser()->getName() + "!" << std::endl;
+                throw InternalError();
+            }
+        }
+    }
+
+    delete[] buffer;
+}
+
+void ServerSession::joinRoom(User *user, Room *room) {
+    std::vector<User*> *users = room->getUsers();
+    users->push_back(user);
+}
+
+void ServerSession::leaveRoom(User *user, Room *room) {
+    std::vector<User*> *users = room->getUsers();
+    users->erase(std::remove(users->begin(), users->end(), user), users->end());
+}
+
+void ServerSession::setStatus(User *user, std::string statusStr) {
+    UserStatus status = user->getStatus();
+    std::transform(statusStr.begin(), statusStr.end(), statusStr.begin(), ::tolower);
+
+    if(statusStr == "online") {
+        status = ONLINE;
+    } else if(statusStr == "offline") {
+        status = OFFLINE;
+    } else if(statusStr == "away") {
+        status = AWAY;
+    }
+
+    user->setStatus(status);
+}
+
+void ServerSession::login(User *user, int connectionSocketDescriptor) {
+    if(user->getConnectionSocketDescriptor() > -1) {
+        logoff(user);
+    }
+    user->setConnectionSocketDescriptor(connectionSocketDescriptor);
+}
+
+bool ServerSession::authorize(User *user) {
+    User* actualUser = userRepository->findByName(user->getName());
+
+    if(actualUser == nullptr)
+        return false;
+
+    return actualUser->getPassword() == user->getPassword();
+}
+
+void ServerSession::sendResponse(Response response, int connectionSocketDescriptor) {
+    std::string content = "[srv]:";
+
+    switch(response) {
+        case Response::OK:
+            content += "ok";
+            break;
+        case Response::UNAUTHORIZED:
+            content += "unauthorized";
+            break;
+        case Response::PARSING_ERROR:
+            content += "parsing_error";
+            break;
+        case Response::INTERNAL_ERROR:
+            content += "internal_error";
+            break;
+    }
+
+    char* buffer = new char[configuration->getBufferSize()];
+    strcpy(buffer, content.c_str());
+
+    if(write(connectionSocketDescriptor, buffer, sizeof(buffer)) < 0) {
+        std::cout << "Could not send response." << std::endl;
+    }
 }

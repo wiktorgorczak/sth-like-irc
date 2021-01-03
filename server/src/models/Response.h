@@ -1,0 +1,15 @@
+//
+// Created by wiktor on 03.01.2021.
+//
+
+#ifndef STHLIKEIRCSERVER_RESPONSE_H
+#define STHLIKEIRCSERVER_RESPONSE_H
+
+enum Response {
+    OK,
+    UNAUTHORIZED,
+    PARSING_ERROR,
+    INTERNAL_ERROR
+};
+
+#endif //STHLIKEIRCSERVER_RESPONSE_H

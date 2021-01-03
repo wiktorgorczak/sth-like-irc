@@ -1,0 +1,18 @@
+//
+// Created by wiktor on 03.01.2021.
+//
+
+#ifndef STHLIKEIRCSERVER_MESSAGETYPE_H
+#define STHLIKEIRCSERVER_MESSAGETYPE_H
+
+enum MessageType {
+    STANDARD,
+    CREATE_ACCOUNT,
+    JOIN_ROOM,
+    LEAVE_ROOM,
+    LOGIN,
+    SET_STATUS,
+    LOGOFF
+};
+
+#endif //STHLIKEIRCSERVER_MESSAGETYPE_H
