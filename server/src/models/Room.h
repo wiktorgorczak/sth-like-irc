@@ -19,6 +19,7 @@ public:
 
     void setUsers(const std::vector<User*> &users);
 
+    void addUser(User* user);
 private:
     std::string name_;
     std::vector<User*> users_;

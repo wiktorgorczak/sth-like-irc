@@ -5,11 +5,11 @@
 #include "MessageParser.h"
 
 Message *MessageParser::parseFrom(std::string content) {
-    return Parser::parseFrom(content);
+    return nullptr;
 }
 
 std::string MessageParser::parseTo(Message *object) {
-    return Parser::parseTo(object);
+    return "";
 }
 
 Message *MessageParser::parseFrom(std::ifstream &file) {

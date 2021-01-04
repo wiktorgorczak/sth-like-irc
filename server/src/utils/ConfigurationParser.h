@@ -10,6 +10,8 @@
 #include "Parser.h"
 
 class ConfigurationParser : public Parser<Configuration> {
+private:
+    static bool validate(Configuration* configuration);
 public:
     Configuration *parseFrom(std::string content) override;
     Configuration *parseFrom(std::ifstream &file) override;

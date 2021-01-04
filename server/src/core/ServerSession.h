@@ -30,7 +30,6 @@
 #include "../utils/UserParser.h"
 #include "../models/Response.h"
 
-bool quit = false;
 void quitSignalHandler(int signal);
 
 class ServerSession {

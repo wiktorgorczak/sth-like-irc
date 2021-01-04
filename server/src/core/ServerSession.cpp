@@ -2,11 +2,12 @@
 #include "../models/Response.h"
 #include "../exceptions/InternalError.h"
 
+bool quitFlag = false;
+
 ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile, std::ifstream &roomsFile) {
     ConfigurationParser configurationParser;
     UserRepositoryParser userRepositoryParser;
-    RoomRepositoryParser roomRepositoryParser;
-    quit = false;
+    quitFlag = false;
     messageParser = new MessageParser();
     userParser = new UserParser();
     currentThreads = new int;
@@ -15,9 +16,11 @@ ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile
     try {
         configuration = configurationParser.parseFrom(configFile);
         userRepository = userRepositoryParser.parseFrom(usersFile);
+
+        RoomRepositoryParser roomRepositoryParser(userRepository);
         roomRepository = roomRepositoryParser.parseFrom(roomsFile);
     } catch(ParsingError &exception) {
-        std::cout << "Could not initialize server configuration due to parsing error." << std::endl;
+        std::cerr << "Could not initialize server configuration due to parsing error." << std::endl;
         throw InitServerError();
     }
 
@@ -50,7 +53,7 @@ void ServerSession::initSignalHandler() {
 }
 
 void quitSignalHandler(int signal) {
-    quit = true;
+    quitFlag = true;
 }
 
 int ServerSession::init() {
@@ -173,9 +176,10 @@ void* ServerSession::threadBehavior(void *tData) {
 }
 
 void ServerSession::run() {
+    std::cout << "Server is running on port " << configuration->getServerPort() << std::endl;
     int connectionSocketDescriptor;
 
-    while(!quit) {
+    while(!quitFlag) {
         connectionSocketDescriptor = accept(serverSocketDescriptor, nullptr, nullptr);
         std::cout << "Incoming connection..." << std::endl;
         if(connectionSocketDescriptor < 0) {
@@ -249,8 +253,7 @@ void ServerSession::sendMessage(Message *message) {
 }
 
 void ServerSession::joinRoom(User *user, Room *room) {
-    std::vector<User*> *users = room->getUsers();
-    users->push_back(user);
+    room->addUser(user);
 }
 
 void ServerSession::leaveRoom(User *user, Room *room) {
@@ -271,6 +274,11 @@ void ServerSession::setStatus(User *user, std::string statusStr) {
     }
 
     user->setStatus(status);
+}
+
+void ServerSession::logoff(User *user) {
+    setStatus(user, "offline");
+    user->setConnectionSocketDescriptor(-1);
 }
 
 void ServerSession::login(User *user, int connectionSocketDescriptor) {
@@ -313,4 +321,8 @@ void ServerSession::sendResponse(Response response, int connectionSocketDescript
     if(write(connectionSocketDescriptor, buffer, sizeof(buffer)) < 0) {
         std::cout << "Could not send response." << std::endl;
     }
+}
+
+void ServerSession::createAccount(User *credentials) {
+
 }

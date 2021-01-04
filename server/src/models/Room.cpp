@@ -19,3 +19,7 @@ std::vector<User*>* Room::getUsers() {
 void Room::setUsers(const std::vector<User*> &users) {
     users_ = users;
 }
+
+void Room::addUser(User *user) {
+    users_.push_back(user);
+}

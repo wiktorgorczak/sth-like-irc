@@ -6,6 +6,9 @@
 #define STHLIKEIRCSERVER_PARSER_H
 
 #include <string>
+#include <iostream>
+#include <fstream>
+#include "../exceptions/ParsingError.h"
 
 template <typename T>
 class Parser {

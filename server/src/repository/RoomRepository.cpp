@@ -3,3 +3,7 @@
 //
 
 #include "RoomRepository.h"
+
+Room *RoomRepository::findByName(std::string name) {
+    return nullptr;
+}
