@@ -52,7 +52,7 @@ private:
     void joinRoom(User* user, Room* room);
     void leaveRoom(User* user, Room* room);
     void login(User* user, int connectionSocketDescriptor);
-    bool authorize(User* user);
+    bool authorize(Message* message);
     void createAccount(User* credentials);
     void setStatus(User* user, std::string statusStr);
     void logoff(User* user);

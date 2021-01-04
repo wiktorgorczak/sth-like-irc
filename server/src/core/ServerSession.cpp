@@ -8,7 +8,6 @@ ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile
     ConfigurationParser configurationParser;
     UserRepositoryParser userRepositoryParser;
     quitFlag = false;
-    messageParser = new MessageParser();
     userParser = new UserParser();
     currentThreads = new int;
     *currentThreads = 0;
@@ -23,6 +22,7 @@ ServerSession::ServerSession(std::ifstream &configFile, std::ifstream &usersFile
         std::cerr << "Could not initialize server configuration due to parsing error." << std::endl;
         throw InitServerError();
     }
+    messageParser = new MessageParser(roomRepository);
 
     sockets = new int[configuration->getMaxThreadCount()];
 
@@ -116,9 +116,12 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
         try {
             Message *message = messageParser->parseFrom(messageText);
 
-            if(!authorize(message->getUser())) {
+            if(!authorize(message)) {
                 response = UNAUTHORIZED;
+
+                delete message->getUser();
             } else {
+
                 switch(message->getType()) {
                     case MessageType::STANDARD:
                         sendMessage(message);
@@ -288,13 +291,20 @@ void ServerSession::login(User *user, int connectionSocketDescriptor) {
     user->setConnectionSocketDescriptor(connectionSocketDescriptor);
 }
 
-bool ServerSession::authorize(User *user) {
-    User* actualUser = userRepository->findByName(user->getName());
+bool ServerSession::authorize(Message *message) {
+    User* actualUser = userRepository->findByName(message->getUser()->getName());
 
     if(actualUser == nullptr)
         return false;
 
-    return actualUser->getPassword() == user->getPassword();
+    if(actualUser->getPassword() == message->getUser()->getPassword()) {
+        if(actualUser != message->getUser()) {
+            delete message->getUser();
+            message->setUser(actualUser);
+        }
+
+        return true;
+    }
 }
 
 void ServerSession::sendResponse(Response response, int connectionSocketDescriptor) {
