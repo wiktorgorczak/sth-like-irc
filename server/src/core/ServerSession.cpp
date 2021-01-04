@@ -109,7 +109,7 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
     bool shouldRemainLoggedIn = true;
     Response response = OK;
     memset(buffer, '\0', bufferSize);
-    if(read(connectionSocketDescriptor, buffer, sizeof(buffer)) < 0) {
+    if(read(connectionSocketDescriptor, buffer, bufferSize) < 0) {
         std::cout << "An error occurred while reading to the buffer." << std::endl;
     } else {
         std::string messageText(buffer);
@@ -168,7 +168,7 @@ void* ServerSession::threadBehavior(void *tData) {
     int socket = threadData->connectionSocketDescriptor;
     ServerSession* serverSession = threadData->serverSession;
     int bufferSize = serverSession->getConfiguration()->getBufferSize();
-    char* buffer = new char[bufferSize];
+    char* buffer = new char[bufferSize]();
 
     while(serverSession->listenOnSocket(socket, buffer, bufferSize));
 
@@ -239,7 +239,7 @@ void ServerSession::sendMessage(Message *message) {
     }
 
     std::vector<User*>* users = message->getRoom()->getUsers();
-    char* buffer = new char[configuration->getBufferSize()];
+    char* buffer = new char[configuration->getBufferSize()]();
     strcpy(buffer, messageText.c_str());
 
     for(const User* user : *users) {
@@ -247,6 +247,7 @@ void ServerSession::sendMessage(Message *message) {
             if(write(user->getConnectionSocketDescriptor(), buffer, sizeof(buffer)) < 0) {
                 std::cout << "Could not send a message from user "
                     + message->getUser()->getName() + "!" << std::endl;
+                delete[] buffer;
                 throw InternalError();
             }
         }
@@ -325,12 +326,13 @@ void ServerSession::sendResponse(Response response, int connectionSocketDescript
             break;
     }
 
-    char* buffer = new char[configuration->getBufferSize()];
+    char* buffer = new char[configuration->getBufferSize()]();
     strcpy(buffer, content.c_str());
-
-    if(write(connectionSocketDescriptor, buffer, sizeof(buffer)) < 0) {
+    buffer[content.length()] = '\0'; //test
+    if(write(connectionSocketDescriptor, buffer, configuration->getBufferSize()) < 0) {
         std::cout << "Could not send response." << std::endl;
     }
+    delete[] buffer;
 }
 
 void ServerSession::createAccount(User *credentials) {

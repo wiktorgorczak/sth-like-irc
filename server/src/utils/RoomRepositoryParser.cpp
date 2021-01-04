@@ -32,6 +32,8 @@ RoomRepository *RoomRepositoryParser::parseFrom(std::ifstream &file) {
         }
 
         file >> std::ws;
+
+        repository->add(room);
     }
 
     return repository;
