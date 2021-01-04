@@ -244,7 +244,7 @@ void ServerSession::sendMessage(Message *message) {
 
     for(const User* user : *users) {
         if(user->getConnectionSocketDescriptor() > -1) {
-            if(write(user->getConnectionSocketDescriptor(), buffer, sizeof(buffer)) < 0) {
+            if(write(user->getConnectionSocketDescriptor(), buffer, configuration->getBufferSize()) < 0) {
                 std::cout << "Could not send a message from user "
                     + message->getUser()->getName() + "!" << std::endl;
                 delete[] buffer;
