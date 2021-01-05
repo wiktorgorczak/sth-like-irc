@@ -19,12 +19,12 @@ public slots:
     void bytesWritten(qint64 bytes);
     void readyRead();
     void connectToServer(QString hostname, qint16 port, QString login, QString password);
-    void sendMessage(QString username, QString password, QString room, QString content);
-    void joinRoom(QString username, QString password, QString room);
-    void leaveRoom(QString username, QString password, QString room);
-    void fetchAllRooms(QString username, QString password);
-    void fetchRoomsForUser(QString username, QString password);
-    void disconnectFromServer(QString username, QString password);
+    void sendMessage(QString room, QString content);
+    void joinRoom(QString room);
+    void leaveRoom(QString room);
+    void fetchAllRooms();
+    void fetchRoomsForUser();
+    void disconnectFromServer();
 
 signals:
     void newMessage(QString username, QString room, QString timeStr, QString message);
@@ -41,6 +41,8 @@ signals:
 private:
     QTcpSocket *socket;
     void sendContent(QString message);
+    QString username;
+    QString password;
 };
 
 #endif // CORECOMMUNICATOR_H

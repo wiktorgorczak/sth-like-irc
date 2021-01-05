@@ -21,5 +21,9 @@ void Room::setUsers(const std::vector<User*> &users) {
 }
 
 void Room::addUser(User *user) {
+    for(auto currentUser : users_) {
+        if(currentUser == user)
+            return;
+    }
     users_.push_back(user);
 }

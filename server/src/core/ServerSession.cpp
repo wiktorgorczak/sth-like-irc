@@ -114,6 +114,7 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
         std::cout << "An error occurred while reading to the buffer." << std::endl;
     } else {
         std::string messageText(buffer);
+        std::cout << "Content: " << messageText << std::endl;
         try {
             Message *message = messageParser->parseFrom(messageText);
 

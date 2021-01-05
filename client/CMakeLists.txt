@@ -38,6 +38,8 @@ if(ANDROID)
     connectdialog.cpp
     connectdialog.h
     connectdialog.ui
+    keyenterreceiver.cpp
+    keyenterreceiver.h
   )
 else()
   add_executable(SthLikeIrcClient
@@ -50,6 +52,8 @@ else()
     connectdialog.cpp
     connectdialog.h
     connectdialog.ui
+    keyenterreceiver.cpp
+    keyenterreceiver.h
   )
 endif()
 

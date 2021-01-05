@@ -16,6 +16,11 @@ Message *MessageParser::parseFrom(std::string content) {
         pos = content.find(delimiter);
         token = content.substr(0, pos);
         content.erase(0, pos + delimiter.length());
+
+        if(token.empty()) {
+            delete message;
+            throw ParsingError();
+        }
     }
 
     username = tokens[0];
@@ -34,6 +39,7 @@ Message *MessageParser::parseFrom(std::string content) {
 
     if(!room) {
         std::cerr << "There is no such room: " << roomName << std::endl;
+        delete user;
         throw ParsingError();
     }
 

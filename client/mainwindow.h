@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "corecommunicator.h"
 #include "connectdialog.h"
+#include "keyenterreceiver.h"
+#include <QStringListModel>
+#include <QShortcut>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,11 +19,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void sendMessage();
 
 private:
     Ui::MainWindow *ui;
     CoreCommunicator *coreCommunicator;
     QString currentRoom;
+    QMap<QString, QString> contextMap;
 
 public slots:
     void newMessage(QString username, QString room, QString timeStr, QString message);
@@ -36,5 +41,8 @@ public slots:
 
 private slots:
     void on_actionConnect_triggered();
+    void on_sendPushButton_clicked();
+    void on_roomListView_activated(const QModelIndex &index);
+    void on_roomListView_clicked(const QModelIndex &index);
 };
 #endif // MAINWINDOW_H

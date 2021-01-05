@@ -1,6 +1,6 @@
 #include "corecommunicator.h"
 
-CoreCommunicator::CoreCommunicator(QObject *parent) : QObject(parent)
+CoreCommunicator::CoreCommunicator(QObject *parent) : QObject(parent), username(""), password("")
 {
     socket = new QTcpSocket(this);
 
@@ -32,15 +32,16 @@ void CoreCommunicator::readyRead()
     QString rawMessage = socket->readAll();
     qDebug() << "raw message: " << rawMessage;
 
-    if(rawMessage == "[srv]:authorized") {
+    if(rawMessage == "[srv]:authorized;") {
         emit loginSuccessful();
-    } else if(rawMessage == "[srv]:unauthorized") {
+    } else if(rawMessage == "[srv]:unauthorized;") {
         emit loginFailed();
-    } else if(rawMessage == "[srv]:parsing_error") {
+        socket->disconnect();
+    } else if(rawMessage == "[srv]:parsing_error;") {
         emit parsingError();
-    } else if(rawMessage == "[srv]:internal_error") {
+    } else if(rawMessage == "[srv]:internal_error;") {
         emit internalServerError();
-    } else if(rawMessage == "[srv]:ok") {
+    } else if(rawMessage == "[srv]:ok;") {
         emit okResponse();
     } else if(rawMessage.startsWith("[srv]:ok;all_rooms")) {
         QStringList rooms = rawMessage.split(";");
@@ -75,54 +76,59 @@ void CoreCommunicator::connectToServer(QString hostname, qint16 port, QString lo
     if(!socket->waitForConnected(1000))
     {
         emit connectionError(socket->errorString());
+    } else {
+        QString message = login + ";" + password + ";general;login;login";
+
+        socket->write(message.toUtf8());
     }
 
-    QString message = login + ";" + password + ";general;login;login";
-
-    socket->write(message.toUtf8());
+    this->username = login;
+    this->password = password;
 }
 
-void CoreCommunicator::sendMessage(QString username, QString password, QString room, QString content)
+void CoreCommunicator::sendMessage(QString room, QString content)
 {
     QString message = username + ";" + password + ";" + room + ";standard;" + content;
     sendContent(message);
 }
 
-void CoreCommunicator::joinRoom(QString username, QString password, QString room)
+void CoreCommunicator::joinRoom(QString room)
 {
     QString message = username + ";" + password + ";" + room + ";join_room;join_room";
     sendContent(message);
 }
 
-void CoreCommunicator::leaveRoom(QString username, QString password, QString room)
+void CoreCommunicator::leaveRoom(QString room)
 {
     QString message = username + ";" + password + ";" + room + ";leave_room;leave_room";
     sendContent(message);
 }
 
-void CoreCommunicator::fetchAllRooms(QString username, QString password)
+void CoreCommunicator::fetchAllRooms()
 {
     QString message = username + ";" + password + ";general;get_rooms;get_rooms";
     sendContent(message);
 }
 
 
-void CoreCommunicator::fetchRoomsForUser(QString username, QString password)
+void CoreCommunicator::fetchRoomsForUser()
 {
     QString message = username + ";" + password + ";general;get_rooms_for_user;get_rooms_for_user";
     sendContent(message);
 }
 
-void CoreCommunicator::disconnectFromServer(QString username, QString password)
+void CoreCommunicator::disconnectFromServer()
 {
     QString message = username + ";" + password + ";" + "general" + ";logoff;logoff";
     sendContent(message);
+    socket->disconnect();
 }
 
 void CoreCommunicator::sendContent(QString message)
 {
     if(!socket->isOpen()) {
         emit socketNotOpen();
+    } else {
+        socket->write(message.toUtf8());
     }
-    socket->write(message.toUtf8());
 }
