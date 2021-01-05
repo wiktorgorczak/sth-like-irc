@@ -12,6 +12,8 @@ enum MessageType {
     LEAVE_ROOM,
     LOGIN,
     SET_STATUS,
+    GET_ROOMS,
+    GET_ROOMS_FOR_USER,
     LOGOFF
 };
 

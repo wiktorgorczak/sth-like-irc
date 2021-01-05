@@ -14,6 +14,7 @@
 class RoomRepository : public Repository<Room> {
 public:
     Room* findByName(std::string name) override;
+    std::vector<Room*> findByUser(User* user);
 };
 
 

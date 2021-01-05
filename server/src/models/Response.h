@@ -7,6 +7,7 @@
 
 enum Response {
     OK,
+    AUTHORIZED,
     UNAUTHORIZED,
     PARSING_ERROR,
     INTERNAL_ERROR

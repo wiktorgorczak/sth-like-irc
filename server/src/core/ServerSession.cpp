@@ -106,10 +106,11 @@ void ServerSession::handleConnection(int connectionSocketDescriptor) {
 }
 
 bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[], int bufferSize) {
-    bool shouldRemainLoggedIn = true;
+    bool shouldRemainLoggedIn = false;
     Response response = OK;
+    std::string extraContent;
     memset(buffer, '\0', bufferSize);
-    if(read(connectionSocketDescriptor, buffer, bufferSize) < 0) {
+    if(read(connectionSocketDescriptor, buffer, bufferSize) < 0) { //TODO: implement timeout
         std::cout << "An error occurred while reading to the buffer." << std::endl;
     } else {
         std::string messageText(buffer);
@@ -121,7 +122,7 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
 
                 delete message->getUser();
             } else {
-
+                shouldRemainLoggedIn = true;
                 switch(message->getType()) {
                     case MessageType::STANDARD:
                         sendMessage(message);
@@ -140,10 +141,17 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
                         break;
                     case MessageType::LOGIN:
                         login(message->getUser(), connectionSocketDescriptor);
+                        response = AUTHORIZED;
                         break;
                     case MessageType::LOGOFF:
                         logoff(message->getUser());
                         shouldRemainLoggedIn = false;
+                        break;
+                    case MessageType::GET_ROOMS:
+                        extraContent = getAllRooms();
+                        break;
+                    case MessageType::GET_ROOMS_FOR_USER:
+                        extraContent = getRoomsForUser(message->getUser());
                         break;
                 }
             }
@@ -156,7 +164,7 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
             response = INTERNAL_ERROR;
         }
 
-        sendResponse(response, connectionSocketDescriptor);
+        sendResponse(response, connectionSocketDescriptor, extraContent);
     }
     return shouldRemainLoggedIn;
 }
@@ -289,6 +297,8 @@ void ServerSession::login(User *user, int connectionSocketDescriptor) {
     if(user->getConnectionSocketDescriptor() > -1) {
         logoff(user);
     }
+
+    std::cout <<"User " << user->getName() << " logged in!" << std::endl;
     user->setConnectionSocketDescriptor(connectionSocketDescriptor);
 }
 
@@ -308,12 +318,23 @@ bool ServerSession::authorize(Message *message) {
     }
 }
 
-void ServerSession::sendResponse(Response response, int connectionSocketDescriptor) {
+//void ServerSession::sendResponse(Response response, int connectionSocketDescriptor) {
+//    sendResponse(response, connectionSocketDescriptor, "");
+//}
+
+void ServerSession::createAccount(User *credentials) {
+
+}
+
+void ServerSession::sendResponse(Response response, int connectionSocketDescriptor, std::string extraContent) {
     std::string content = "[srv]:";
 
     switch(response) {
         case Response::OK:
             content += "ok";
+            break;
+        case Response::AUTHORIZED:
+            content += "authorized";
             break;
         case Response::UNAUTHORIZED:
             content += "unauthorized";
@@ -326,6 +347,9 @@ void ServerSession::sendResponse(Response response, int connectionSocketDescript
             break;
     }
 
+    if(!content.empty())
+        content += ";" + extraContent;
+
     char* buffer = new char[configuration->getBufferSize()]();
     strcpy(buffer, content.c_str());
     buffer[content.length()] = '\0'; //test
@@ -335,6 +359,24 @@ void ServerSession::sendResponse(Response response, int connectionSocketDescript
     delete[] buffer;
 }
 
-void ServerSession::createAccount(User *credentials) {
+std::string ServerSession::getRoomsForUser(User *user) {
+    std::vector<Room*> rooms = roomRepository->findByUser(user);
+    std::string roomsStr = "user_rooms";
 
+    for(auto room : rooms) {
+        roomsStr += ";" + room->getName();
+    }
+
+    return roomsStr;
+}
+
+std::string ServerSession::getAllRooms() {
+    std::vector<Room*> rooms = roomRepository->findAll();
+    std::string roomsStr = "all_rooms";
+
+    for(auto room : rooms) {
+        roomsStr += ";" + room->getName();
+    }
+
+    return roomsStr;
 }

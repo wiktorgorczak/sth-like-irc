@@ -19,6 +19,7 @@ public:
     virtual void add(T* obj);
     virtual void remove(T* obj);
     virtual T* findByName(std::string name) = 0;
+    virtual std::vector<T*> findAll();
 };
 
 template<typename T>
@@ -39,6 +40,17 @@ void Repository<T>::add(T *obj) {
 template<typename T>
 void Repository<T>::remove(T *obj) {
     objects->erase(std::remove(objects->begin(), objects->end(), obj), objects->end());
+}
+
+template<typename T>
+std::vector<T*> Repository<T>::findAll() {
+    std::vector<T*> all;
+
+    for(auto obj : *objects) {
+        all.push_back(obj);
+    }
+
+    return all;
 }
 
 #endif //STHLIKEIRCSERVER_REPOSITORY_H

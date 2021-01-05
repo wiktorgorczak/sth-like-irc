@@ -11,6 +11,11 @@ RoomRepository *RoomRepositoryParser::parseFrom(std::string content) {
 RoomRepository *RoomRepositoryParser::parseFrom(std::ifstream &file) {
     auto repository = new RoomRepository;
 
+    //general room for service purposes
+    auto generalRoom = new Room;
+    generalRoom->setName("general");
+    repository->add(generalRoom);
+    //
     while(file) {
         auto room = new Room;
         std::string name;

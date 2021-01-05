@@ -56,9 +56,11 @@ private:
     void createAccount(User* credentials);
     void setStatus(User* user, std::string statusStr);
     void logoff(User* user);
+    std::string getAllRooms();
+    std::string getRoomsForUser(User* user);
     static void* threadBehavior(void* tData);
-    void sendResponse(Response response, int connectionSocketDescriptor);
-
+    //void sendResponse(Response response, int connectionSocketDescriptor);
+    void sendResponse(Response response, int connectionSocketDescriptor, std::string extraContent);
 public:
     ServerSession(std::ifstream &configFile, std::ifstream &usersFile, std::ifstream &roomsFile);
     ~ServerSession();
