@@ -1,0 +1,3 @@
+/home/wiktor/CLionProjects/sth-like-irc/server/CMakeFiles/rebuild_cache.dir
+/home/wiktor/CLionProjects/sth-like-irc/server/CMakeFiles/edit_cache.dir
+/home/wiktor/CLionProjects/sth-like-irc/server/CMakeFiles/SthLikeIrcServer.dir

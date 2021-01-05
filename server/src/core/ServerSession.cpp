@@ -320,6 +320,8 @@ bool ServerSession::authorize(Message *message) {
 
         return true;
     }
+
+    return false;
 }
 
 //void ServerSession::sendResponse(Response response, int connectionSocketDescriptor) {

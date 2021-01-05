@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="SthLikeIrcServer"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/wiktor/CLionProjects/sth-like-irc/server"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/wiktor/CLionProjects/sth-like-irc/server"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/wiktor/CLionProjects/sth-like-irc/server"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SthLikeIrcServer">
+				<Option output="/home/wiktor/CLionProjects/sth-like-irc/server/SthLikeIrcServer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/wiktor/CLionProjects/sth-like-irc/server"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 SthLikeIrcServer"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SthLikeIrcServer/fast">
+				<Option output="/home/wiktor/CLionProjects/sth-like-irc/server/SthLikeIrcServer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/wiktor/CLionProjects/sth-like-irc/server"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/../../../../include/c++/10.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 SthLikeIrcServer/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/wiktor/CLionProjects/sth-like-irc/server/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/core/Configuration.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/core/Configuration.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/core/ServerSession.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/core/ServerSession.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/exceptions/InitServerError.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/exceptions/InitServerError.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/exceptions/InternalError.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/exceptions/InternalError.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/exceptions/ParsingError.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/exceptions/ParsingError.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/main.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/Message.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/Message.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/MessageType.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/Response.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/Room.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/Room.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/User.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/User.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/models/UserStatus.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/repository/Repository.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/repository/RoomRepository.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/repository/RoomRepository.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/repository/UserRepository.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/repository/UserRepository.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/ConfigurationParser.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/ConfigurationParser.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/MessageParser.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/MessageParser.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/Parser.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/RoomRepositoryParser.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/RoomRepositoryParser.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/UserParser.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/UserParser.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/UserRepositoryParser.cpp">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/src/utils/UserRepositoryParser.h">
+			<Option target="SthLikeIrcServer"/>
+		</Unit>
+		<Unit filename="/home/wiktor/CLionProjects/sth-like-irc/server/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
