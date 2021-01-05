@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(coreCommunicator, &CoreCommunicator::socketNotOpen, this, &MainWindow::socketNotOpen);
     connect(coreCommunicator, &CoreCommunicator::allRooms, this, &MainWindow::allRooms);
     connect(coreCommunicator, &CoreCommunicator::roomsForUser, this, &MainWindow::roomsForUser);
+    connect(coreCommunicator, &CoreCommunicator::onlineUsers, this, &MainWindow::onlineUsers);
 
     KeyEnterReceiver *key = new KeyEnterReceiver(parent, ui->sendPushButton);
     ui->messageTextEdit->installEventFilter(key);
@@ -93,6 +94,23 @@ void MainWindow::roomsForUser(QStringList rooms)
 
     if(!rooms.empty())
         currentRoom = rooms.at(0);
+
+    coreCommunicator->fetchOnlineUsers(currentRoom);
+}
+
+void MainWindow::onlineUsers(QString room, QStringList users)
+{
+    if(currentRoom == room) {
+        if(!ui->userListView->model()) {
+            QStringListModel *model = new QStringListModel(this);
+            ui->userListView->setModel(model);
+        }
+
+        QStringListModel *model = (QStringListModel*)ui->userListView->model();
+        model->setStringList(users);
+
+        qDebug() << "something";
+    }
 }
 
 void MainWindow::socketNotOpen()
@@ -136,4 +154,12 @@ void MainWindow::on_roomListView_clicked(const QModelIndex &index)
 
     currentRoom = value;
     ui->conversationTextEdit->setText(contextMap.value(currentRoom));
+
+    coreCommunicator->fetchOnlineUsers(currentRoom);
+
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    this->close();
 }

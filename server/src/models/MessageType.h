@@ -14,6 +14,7 @@ enum MessageType {
     SET_STATUS,
     GET_ROOMS,
     GET_ROOMS_FOR_USER,
+    GET_ONLINE_USERS,
     LOGOFF
 };
 

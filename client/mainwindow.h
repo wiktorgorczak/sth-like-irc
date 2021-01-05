@@ -26,6 +26,7 @@ private:
     CoreCommunicator *coreCommunicator;
     QString currentRoom;
     QMap<QString, QString> contextMap;
+    QStringList onlineUserList;
 
 public slots:
     void newMessage(QString username, QString room, QString timeStr, QString message);
@@ -38,11 +39,13 @@ public slots:
     void socketNotOpen();
     void allRooms(QStringList rooms);
     void roomsForUser(QStringList rooms);
+    void onlineUsers(QString room, QStringList users);
 
 private slots:
     void on_actionConnect_triggered();
     void on_sendPushButton_clicked();
     void on_roomListView_activated(const QModelIndex &index);
     void on_roomListView_clicked(const QModelIndex &index);
+    void on_actionQuit_triggered();
 };
 #endif // MAINWINDOW_H

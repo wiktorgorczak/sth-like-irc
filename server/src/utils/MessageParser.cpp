@@ -92,6 +92,8 @@ MessageType MessageParser::parseType(std::string type) {
         return GET_ROOMS;
     else if(type == "get_rooms_for_user")
         return GET_ROOMS_FOR_USER;
+    else if(type == "get_online_users")
+        return GET_ONLINE_USERS;
     else
         return STANDARD;
 }

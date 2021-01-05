@@ -129,9 +129,8 @@
     </property>
     <addaction name="separator"/>
     <addaction name="actionConnect"/>
-    <addaction name="actionExit"/>
     <addaction name="separator"/>
-    <addaction name="actionExit_2"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -146,7 +145,7 @@
     <string>Join room</string>
    </property>
   </action>
-  <action name="actionExit_2">
+  <action name="actionQuit">
    <property name="text">
     <string>Exit</string>
    </property>

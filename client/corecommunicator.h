@@ -25,6 +25,7 @@ public slots:
     void fetchAllRooms();
     void fetchRoomsForUser();
     void disconnectFromServer();
+    void fetchOnlineUsers(QString room);
 
 signals:
     void newMessage(QString username, QString room, QString timeStr, QString message);
@@ -37,6 +38,7 @@ signals:
     void socketNotOpen();
     void allRooms(QStringList rooms);
     void roomsForUser(QStringList rooms);
+    void onlineUsers(QString room, QStringList users);
 
 private:
     QTcpSocket *socket;

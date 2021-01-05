@@ -154,6 +154,9 @@ bool ServerSession::listenOnSocket(int connectionSocketDescriptor, char buffer[]
                     case MessageType::GET_ROOMS_FOR_USER:
                         extraContent = getRoomsForUser(message->getUser());
                         break;
+                    case MessageType::GET_ONLINE_USERS:
+                        extraContent = getOnlineUsers(message->getRoom());
+                        break;
                 }
             }
 
@@ -298,7 +301,7 @@ void ServerSession::login(User *user, int connectionSocketDescriptor) {
     if(user->getConnectionSocketDescriptor() > -1) {
         logoff(user);
     }
-
+    user->setStatus(ONLINE);
     std::cout <<"User " << user->getName() << " logged in!" << std::endl;
     user->setConnectionSocketDescriptor(connectionSocketDescriptor);
 }
@@ -327,7 +330,7 @@ void ServerSession::createAccount(User *credentials) {
 
 }
 
-void ServerSession::sendResponse(Response response, int connectionSocketDescriptor, std::string extraContent) {
+void ServerSession::sendResponse(Response response, int connectionSocketDescriptor, std::string &extraContent) {
     std::string content = "[srv]:";
 
     switch(response) {
@@ -380,4 +383,19 @@ std::string ServerSession::getAllRooms() {
     }
 
     return roomsStr;
+}
+
+std::string ServerSession::getOnlineUsers(Room *room) {
+    std::string users = "online_users;" + room->getName();
+    for(User *user : *(room->getUsers())) {
+        if(user->getStatus() != OFFLINE) {
+            users += ";" + user->getName();
+
+            if(user->getStatus() == AWAY) {
+                users += "[AWAY]";
+            }
+        }
+    }
+
+    return users;
 }

@@ -45,16 +45,43 @@ void CoreCommunicator::readyRead()
         emit okResponse();
     } else if(rawMessage.startsWith("[srv]:ok;all_rooms")) {
         QStringList rooms = rawMessage.split(";");
-        rooms.removeFirst();
-        rooms.removeFirst();
 
-        emit allRooms(rooms);
+        if(rooms.length() < 3)
+            emit internalServerError();
+        else {
+            rooms.removeFirst();
+            rooms.removeFirst();
+
+            emit allRooms(rooms);
+        }
+
     } else if(rawMessage.startsWith("[srv]:ok;user_rooms")) {
         QStringList rooms = rawMessage.split(";");
-        rooms.removeFirst();
-        rooms.removeFirst();
 
-        emit roomsForUser(rooms);
+        if(rooms.length() < 3) {
+            emit internalServerError();
+        } else {
+            rooms.removeFirst();
+            rooms.removeFirst();
+
+            emit roomsForUser(rooms);
+        }
+
+
+    } else if(rawMessage.startsWith("[srv]:ok;online_users")) {
+        QStringList users = rawMessage.split(";");
+
+        if(users.length() < 4)
+            emit internalServerError();
+        else {
+            users.removeFirst();
+            users.removeFirst();
+            QString room = users.at(0);
+            users.removeFirst();
+
+            emit onlineUsers(room, users);
+        }
+
     } else {
         QStringList tokens = rawMessage.split(";");
         if(tokens.length() < 4)
@@ -114,6 +141,12 @@ void CoreCommunicator::fetchAllRooms()
 void CoreCommunicator::fetchRoomsForUser()
 {
     QString message = username + ";" + password + ";general;get_rooms_for_user;get_rooms_for_user";
+    sendContent(message);
+}
+
+void CoreCommunicator::fetchOnlineUsers(QString room)
+{
+    QString message = username + ";" + password + ";" + room + ";get_online_users;get_online_users";
     sendContent(message);
 }
 
