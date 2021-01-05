@@ -1,4 +1,0 @@
-/home/wiktor/CLionProjects/sth-like-irc/client/build/CMakeFiles/rebuild_cache.dir
-/home/wiktor/CLionProjects/sth-like-irc/client/build/CMakeFiles/edit_cache.dir
-/home/wiktor/CLionProjects/sth-like-irc/client/build/CMakeFiles/SthLikeIrcClient.dir
-/home/wiktor/CLionProjects/sth-like-irc/client/build/CMakeFiles/SthLikeIrcClient_autogen.dir
